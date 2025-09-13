@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from './api/axios';
 import InputForm from './components/InputForm';
 import './App.css';
 
@@ -52,12 +52,10 @@ function App() {
     }
 
     try {
-      const response = await axios.post('/api/generate', data, {
+      const response = await api.post('/generate', data, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-        // The backend expects HTML, so let's set the responseType
-        // The spec says the backend will return text/html
         responseType: 'text',
       });
       setPresentationHtml(response.data);
