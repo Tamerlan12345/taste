@@ -1,0 +1,68 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.app-header {
+  background-color: #212529;
+  color: #f8f9fa;
+  padding: 10px 20px;
+  border-bottom: 1px solid #495057;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.main-content {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden; /* Prevent scrolling on the main container */
+}
+
+.control-panel {
+  width: 40%;
+  background-color: #ffffff;
+  border-right: 1px solid #dee2e6;
+  overflow-y: auto; /* Allow scrolling if content is long */
+}
+
+.presentation-view {
+  width: 60%;
+  background-color: #f8f9fa;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* For skeleton loader positioning */
+}
+
+.presentation-view-placeholder {
+  text-align: center;
+  color: #adb5bd;
+}
+
+.skeleton-loader {
+  width: 90%;
+  height: 90%;
+  background: linear-gradient(90deg, #e9ecef 25%, #f8f9fa 50%, #e9ecef 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 5px;
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+}
