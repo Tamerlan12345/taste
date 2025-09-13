@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 
 const AuthContext = createContext(null);
 
@@ -7,11 +7,10 @@ export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Check auth status on initial load
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        await axios.get('/api/auth-status');
+        await api.get('/auth-status');
         setIsAuthenticated(true);
       } catch (error) {
         setIsAuthenticated(false);
@@ -24,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (password) => {
     try {
-      await axios.post('/api/login', { password });
+      await api.post('/login', { password });
       setIsAuthenticated(true);
       return true;
     } catch (error) {
@@ -34,7 +33,6 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    // We would also call a /api/logout endpoint here
     setIsAuthenticated(false);
   };
 

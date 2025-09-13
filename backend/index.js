@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
@@ -19,10 +20,13 @@ const uploadsDir = path.join(__dirname, 'public/uploads');
 fs.mkdirSync(uploadsDir, { recursive: true });
 
 // Middleware
+// IMPORTANT: In production, configure CORS more securely.
+// e.g., app.use(cors({ origin: 'https://your-frontend-domain.github.io', credentials: true }));
+app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 
-// Serve static assets from the backend's public folder
+// Serve static assets from the backend's public folder (for uploaded images)
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // API routes
@@ -44,7 +48,12 @@ const checkAuth = (req, res, next) => {
 
 apiRouter.post('/login', (req, res) => {
   if (req.body.password === hardcodedPassword) {
-    res.cookie('authToken', authTokenSecret, { httpOnly: true, maxAge: 86400000 });
+    res.cookie('authToken', authTokenSecret, {
+      httpOnly: true,
+      secure: true, // Use secure cookies as it will be cross-site
+      sameSite: 'none', // Allow cross-site cookie
+      maxAge: 86400000
+    });
     res.status(200).json({ message: 'Login successful' });
   } else {
     res.status(401).json({ message: 'Invalid password' });
@@ -58,7 +67,7 @@ apiRouter.get('/auth-status', checkAuth, (req, res) => {
 const systemPrompt = `
 ## РОЛЬ И ЦЕЛЬ
 Ты — мультидисциплинарный эксперт-разработчик...
-`; // System prompt truncated for brevity, it's the same as before
+`; // System prompt truncated for brevity
 
 apiRouter.post('/generate', checkAuth, upload.array('files'), async (req, res) => {
   try {
@@ -101,14 +110,8 @@ apiRouter.post('/generate', checkAuth, upload.array('files'), async (req, res) =
 
 app.use('/api', apiRouter);
 
-// Serve frontend application
-const frontendDistPath = path.join(__dirname, '../frontend/dist');
-app.use(express.static(frontendDistPath));
-
-// For any other request, serve the frontend's index.html
-app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendDistPath, 'index.html'));
+app.get('/', (req, res) => {
+  res.send('Genesis Presentations Backend is running!');
 });
-
 
 app.listen(port, () => console.log(`Backend server listening at http://localhost:${port}`));
