@@ -166,7 +166,7 @@ app.post('/api/messages', async (req, res) => {
 // --- ВАЖНОЕ ИЗМЕНЕНИЕ: Обработка React Router ---
 // Любой запрос, который не начинается с /api, отправляем на index.html
 // Это нужно, чтобы работали ссылки типа /login, /admin при перезагрузке страницы
-app.get('*', (req, res) => {
+app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
 });
 
