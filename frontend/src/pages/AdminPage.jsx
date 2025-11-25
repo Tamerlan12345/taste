@@ -27,7 +27,7 @@ const AdminPage = () => {
     try {
       const response = await axios.post('http://localhost:3001/api/generate');
       setMessage(response.data.message);
-    } catch (error) {
+    } catch {
       setMessage('Произошла ошибка при запуске магии.');
     }
   };

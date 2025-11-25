@@ -1,7 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../api/axios';
-
-const AuthContext = createContext(null);
+import { AuthContext } from './AuthContext';
 
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -12,7 +11,7 @@ export const AuthProvider = ({ children }) => {
       try {
         await api.get('/auth-status');
         setIsAuthenticated(true);
-      } catch (error) {
+      } catch {
         setIsAuthenticated(false);
       } finally {
         setLoading(false);
@@ -26,7 +25,7 @@ export const AuthProvider = ({ children }) => {
       await api.post('/login', { password });
       setIsAuthenticated(true);
       return true;
-    } catch (error) {
+    } catch {
       setIsAuthenticated(false);
       throw new Error('Invalid password');
     }
@@ -45,6 +44,3 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-export const useAuth = () => {
-  return useContext(AuthContext);
-};

@@ -35,7 +35,7 @@ const UserPage = () => {
       await axios.put(`http://localhost:3001/api/wishlist/${user.id}`, { wishlist: newWishlist });
       setMyWishlist(newWishlist);
       alert('Вишлист сохранен!');
-    } catch (error) {
+    } catch {
       alert('Не удалось сохранить вишлист.');
     }
   };
