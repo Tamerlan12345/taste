@@ -5,7 +5,7 @@
       "name": "backend",
       "build": {
         "builder": "NIXPACKS",
-        "rootDirectory": "./backend"
+        "rootDirectory": "backend"
       },
       "deploy": {
         "startCommand": "npm install && node index.js",
@@ -18,7 +18,7 @@
       "build": {
         "builder": "NIXPACKS",
         "buildCommand": "npm run build",
-        "rootDirectory": "./frontend"
+        "rootDirectory": "frontend"
       },
       "deploy": {
         "startCommand": "npx http-server ./dist",
