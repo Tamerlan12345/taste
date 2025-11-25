@@ -11,7 +11,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/api/users');
+        const response = await axios.get('/api/users');
         // Добавляем статус "зарегистрирован" для всех (в реальном приложении статус нужно получать с бэка)
         const usersWithStatus = response.data.map(user => ({ ...user, status: 'зарегистрировался' }));
         setParticipants(usersWithStatus);
@@ -25,7 +25,7 @@ const AdminPage = () => {
   // Функция для запуска жеребьевки
   const handleGenerate = async () => {
     try {
-      const response = await axios.post('http://localhost:3001/api/generate');
+      const response = await axios.post('/api/generate');
       setMessage(response.data.message);
     } catch {
       setMessage('Произошла ошибка при запуске магии.');
