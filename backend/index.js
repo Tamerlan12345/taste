@@ -1,12 +1,13 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path'); // Добавляем модуль path
 const { createClient } = require('@supabase/supabase-js');
 
 // Загрузка переменных окружения
 require('dotenv').config();
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001; // Важно использовать process.env.PORT для Railway
 
 // Подключение к Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -17,20 +18,14 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 app.use(cors());
 app.use(express.json());
 
-// Базовый роут
-app.get('/', (req, res) => {
-  res.send('Secret Santa API is running!');
-});
+// --- ВАЖНОЕ ИЗМЕНЕНИЕ: Раздача статики Frontend ---
+// Указываем Express, где лежат собранные файлы React (Vite собирает их в frontend/dist)
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
-// API-эндпоинты
-
-// Вход пользователя
+// API-эндпоинты (оставляем ваши старые роуты без изменений)
 app.post('/api/login', async (req, res) => {
   const { name, pin_code } = req.body;
-
-  if (!name || !pin_code) {
-    return res.status(400).json({ error: 'Имя и пин-код обязательны' });
-  }
+  if (!name || !pin_code) return res.status(400).json({ error: 'Имя и пин-код обязательны' });
 
   const { data, error } = await supabase
     .from('users')
@@ -39,10 +34,7 @@ app.post('/api/login', async (req, res) => {
     .eq('pin_code', pin_code)
     .single();
 
-  if (error || !data) {
-    return res.status(401).json({ error: 'Неверное имя или пин-код' });
-  }
-
+  if (error || !data) return res.status(401).json({ error: 'Неверное имя или пин-код' });
   res.json(data);
 });
 
@@ -171,9 +163,16 @@ app.post('/api/messages', async (req, res) => {
   res.status(201).json(data);
 });
 
+// --- ВАЖНОЕ ИЗМЕНЕНИЕ: Обработка React Router ---
+// Любой запрос, который не начинается с /api, отправляем на index.html
+// Это нужно, чтобы работали ссылки типа /login, /admin при перезагрузке страницы
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist', 'index.html'));
+});
+
 // Запуск сервера
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}`);
+  console.log(`Server is listening at port ${port}`);
 });
 
 module.exports = { app, supabase };
