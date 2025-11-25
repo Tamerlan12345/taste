@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/LoginPage.jsx';
 import AdminPage from './pages/AdminPage.jsx';
 import UserPage from './pages/UserPage.jsx';
-import { AuthProvider } from './context/AuthContext.jsx';
+import { AuthProvider } from './context/AuthProvider.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import './index.css';
 
