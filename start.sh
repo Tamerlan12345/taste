@@ -1,4 +1,6 @@
 #!/bin/bash
+# Install Node.js and npm
+sudo apt-get update && sudo apt-get install -y nodejs npm
 # 1. Сборка Фронтенда
 echo "Install & Build Frontend..."
 cd frontend
